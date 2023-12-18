@@ -1,0 +1,116 @@
+
+* - IMPORTANTES
+
+*Entidades: (100% OK)
+    Usuario - coduser(PK),nome,cpf,senha,email, nivelacesso
+    Inquerito - codinque(PK),num. inquerito, num. inquerito na justiça, classe,localfisico,datainstauração,areainquerito,
+                vítima, investigado, nivelacesso,adicionado_por_historico(FK)
+    Movimentacao - codmov(PK),data, status,condInque(FK)
+    Historico de Inquerito - codhist(PK), data,hora, açao, tipo, coduser(FK),codInque(FK)
+    
+
+Funcionalidades(60% OK):
+    *Criar conta
+    *Fazer login
+    alterar conta( Irrelevante no momento)
+    *Adicionar inquerito - Ok
+    *adicionar movimentação -Ok
+    *Alterar inquerito - Ok
+    *Ver inquerito -Ok
+    *listar inqueritos -OK
+     listar historicos
+     adicionar historico
+
+
+Authentication:( 0% OK)
+    *Criptografar senha 
+    *Criar autenticação de loguin segura com JWT
+
+
+Observações:
+    Ver a possibilidade de por try: catch em todas requisições a banco de dados
+Links uteis de bibliotecas para criptografia:
+    -https://medium.com/collabcode/criptografando-e-descriptografando-dados-com-nodejs-f3f34a9390e4#:~:text=Para%20criptografar%20uma%20senha%20com,os%20objetos%20Cipher%20e%20Decipher%20.
+    -https://www.youtube.com/watch?v=aVAl8GzS0d0 ( E Authenticator
+    https://justmarkup.com/articles/2018-05-31-https-valid-certificate-local-domain/
+
+
+TEST
+
+User:
+{
+	"user_name":"Chrissti4an 4lima frei4otag",
+	"cpf_user":"666.s546664.9.49.9",
+	"email_user":"posi@gmail.com",
+	"pw_user":"abc1234",
+	"confirm_pw_user":"abc1234",
+	"cod_valid":"2dECCOR0dEDEPP2dEICOT1@2013@p99949c9148L00000x"
+}
+
+Login:
+{
+	"cpf_user":"666.s546664.9.49.9",
+	"pw_user":"abc1234"
+}
+
+Inquerito:
+{
+	"num_inq":"2222-d222ecc113333or",
+	"num_in_justice_inq":"3212123121122233333",
+	"typefic_inq":"LEI 2011 - ART1",
+	"location_inq":"Sob juridição do delegado bandeira",
+	"establis_date_inq":"15/08/2016",
+	"acess_level_required":0,
+	"cod_main_inq":2,
+	"value_rec_inq":0.0,
+	"status":"Aberto",
+	"victms":["Elaine melo mdeira"],
+	"investigs":["Alexandre aguair"],
+	"movements":[
+		{
+			"cod_inq":6,
+			"data":"25/03/2021",
+			"type_mov":"Interno",
+			"reason_mov":"Indiciamento",
+			"status":"Transferido para o judiciario por indiciamento"
+		},
+		{
+			"cod_inq":6,
+			"data":"24/01/2021",
+			"type_mov":"Externo",
+			"reason_mov":"Reavaliação",
+			"status":"Transferido para o judiciario"
+		}
+	]
+}
+
+
+
+
+NOVOS:
+    vítimas
+
+
+MEMORIES:
+
+	PROB's: 
+		LISTAR MOVIMENTOS -  INSERIR E APAGAR E SALVAR BANCO
+				Os movimento serão trazidos junto ao 'json' do inquerito e um novo json sera criado. Para esse 'novo' json, sera passado um atributo chamado status. Esse atributo,
+			dentro das movimentações vai servir para diferenciar dados que vem do banco de dados e os dados que serão adicionados ao editar uma 
+			movimentação(pois os moviemntos não podem ser apagados).
+				Então o status para os dadops vindo do banco de dados é '1' e para os adicionados é '0'. Dessa forma separando inclusive na hora de salva-los novamente no banco de dados.
+			Pois só os que serão salvos são os novos inseridos, com status '0'. 
+
+		LISTAR ENVOLVIDOS -  INSERIR E APAGAR E SALVAR BANCO
+				Os enmvolvidos, assim como os movimentos também serão trazidos junto ao inquérito. E assim como as movimentações um novo 'json' será criado adicionando um atributo 'status'
+			para diferenciar dados que ja estavam no banco de dados e os que serão adicionados. ( A diferença é que agora tanto os dados inseridos, como os do banco de dados podem ser removidos)
+			Com isso vamos trabalhar com tres tipos de status. O status '1' informando que aquele envolvido veio do ban co de dados. O status '2' informando quie aquele status foi inserido
+			na edição. E o nstatus 0 indicando que aquele status ja foi um status 1( vindo do db) porém foi deletado.
+
+
+FUTURO:
+	SALVAR NO BANCO OS NOMES DOS ENVOLVIDOS PROTEGENDO CONTRA REPETIÇÃO
+				Basta criar uma tabelka no banco de dados 'envolv_inq' que seria a relação entre o inquérito com os envolvidos ( E adicinarei atributo para distinguir se é vítima 
+			ou investigado). Por hora vou deixar a repetição mpara não atrasar o andanmento do projeto
+	EVITAR REPETIÇÂO NO BANCO POR CONTA DAS MOVIMENTACÕES E INVOLVED
+				Talvez crioando uma tabela N-N (Especificando data)  pode fazer com que o banco fique menor e com menos repetições
